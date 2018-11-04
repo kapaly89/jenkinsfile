@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages{
+        stage("Stage1"){
+            steps{
+            git "git@github.com:kapaly89/terraform_jenkins_keys.git"
+            sh "cd ${workspace}/"
+                
+            }
+        }
+        stage("Terraform init"){
+            steps{
+                sh "terraform init"
+            }
+        }
+        stage("Terraform Plan"){
+            steps{
+                sh 'terraform plan -var region="${REGION}" -var sshkey="${SSHKEY}" input=false -out=sshkey."${env.BUILD_ID}"'
+            }
+        }
+    }
+}
